@@ -1,6 +1,13 @@
 let role = null
 let pressSound = null
 
+document.addEventListener(CIRCLES.EVENTS.CAMERA_ATTACHED, function() {
+    console.log("called");
+    console.log()
+    document.querySelector("#Player1").querySelector(".avatar").querySelector(".user_head").setAttribute("circles-shadow", {cast:false, receive:false});
+    document.querySelector("#Player1").querySelector(".avatar").querySelector(".user_body").setAttribute("circles-shadow", {cast:false, receive:false});
+});
+
 AFRAME.registerComponent('setup', {
     schema: {},
     init() {
