@@ -19,6 +19,7 @@
         <img id="codeArt1" src="/worlds/TestWorld/assets/CodeArt_1.png" crossorigin="anonymous">
         <img id="codeArt2" src="/worlds/TestWorld/assets/CodeArt_2.png" crossorigin="anonymous">
         <img id="endScreen" src="/worlds/TestWorld/assets/EndScreen.png" crossorigin="anonymous">
+        <img id="dpad_dir" src="/worlds/TestWorld/assets/dpad_dir.png" crossorigin="anonymous" transparent="true">
       <!-- Circles' built-in assets [REQUIRED] -->
       <circles-assets/>
     </a-assets>
@@ -30,7 +31,12 @@
       <a-entity id="north" class="wall" position="7 3 0" rotation="0 -90 0" geometry="primitive:plane; width:14; height:6;" material="color:white;" shadow="receive:true; cast:false;">
           <a-entity geometry="primitive:plane; width:1.61; height:2.2;" material="src:#upPoster" position="0 0 0.01" shadow="cast:false; receive:true;"></a-entity>
       </a-entity>
-      <a-entity id="east" class="wall" position="0 3 7" rotation="0 180 0" geometry="primitive:plane; width:14; height:6;" material="color:white;" shadow="receive:true; cast:false;"></a-entity>
+      <a-entity id="east" class="wall" position="0 3 7" rotation="0 180 0" geometry="primitive:plane; width:14; height:6;" material="color:white;" shadow="receive:true; cast:false;">
+        <!-- congrats dropdown -->
+        <a-entity id="screen" geometry="primitive:box; width:7; height:5.23; depth:0.1;" material="color:white" position="0 6.387 1" shadow>
+          <a-entity geometry="primitive:plane; width:6.6; height:4.83;" material="src:#endScreen" position="0 0 0.06" shadow="cast:false; receive:true;"></a-entity>
+        </a-entity>
+      </a-entity>
       <a-entity id="south" class="wall" position="-7 3 0" rotation="0 90 0" geometry="primitive:plane; width:14; height:6;" material="color:white;" shadow="receive:true; cast:false;"></a-entity>
       <a-entity id="west" class="wall" position="0 3 -7" rotation="0 0 0" geometry="primitive:plane; width:14; height:6;" material="color:white;" shadow="receive:true; cast:false;">      </a-entity>
       <!-- ceiling -->

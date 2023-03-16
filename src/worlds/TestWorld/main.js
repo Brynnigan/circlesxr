@@ -2,10 +2,75 @@ let role = null
 let pressSound = null
 
 document.addEventListener(CIRCLES.EVENTS.CAMERA_ATTACHED, function() {
-    console.log("called");
-    console.log()
-    document.querySelector("#Player1").querySelector(".avatar").querySelector(".user_head").setAttribute("circles-shadow", {cast:false, receive:false});
-    document.querySelector("#Player1").querySelector(".avatar").querySelector(".user_body").setAttribute("circles-shadow", {cast:false, receive:false});
+    let player = document.querySelector("#Player1").querySelector(".avatar");
+    document.querySelector("#Player1").setAttribute('movement-controls', {enabled:false});
+    
+    player.querySelector(".user_head").setAttribute("circles-shadow", {cast:false, receive:false});
+    player.querySelector(".user_body").setAttribute("circles-shadow", {cast:false, receive:false});
+    let cam = document.querySelector('[camera]');
+    cam.setAttribute('look-controls', {enabled:false});
+    let dpad = document.createElement('a-entity');
+    dpad.setAttribute('position', '-0.045 -0.02 -0.05');
+    let up = document.createElement('a-entity');
+    up.setAttribute('geometry', 'primitive:plane; height:0.01; width:0.02');
+    up.setAttribute('material', 'src:#dpad_dir; transparent:true');
+    up.setAttribute('position', '0 0.012 0');
+    up.setAttribute('shadow', 'cast:false; receive:false');
+    up.classList.add('interactive');
+    up.onmousedown = function() {
+        player.setAttribute('dpad-move-forward', 'true');
+        player.removeAttribute('dpad-move-back');
+    }
+    up.onmouseup = function() {
+        player.removeAttribute('dpad-move-forward');
+    }
+    let left = document.createElement('a-entity');
+    left.setAttribute('geometry', 'primitive:plane; height:0.01; width:0.02');
+    left.setAttribute('material', 'src:#dpad_dir; transparent:true');
+    left.setAttribute('position', '-0.012 0 0');
+    left.setAttribute('rotation', '0 0 90');
+    left.setAttribute('shadow', 'cast:false; receive:false');
+    left.classList.add('interactive');
+    left.onmousedown = function() {
+        player.setAttribute('dpad-turn-left', 'true');
+        player.removeAttribute('dpad-turn-right');
+    }
+    left.onmouseup = function() {
+        player.removeAttribute('dpad-turn-left');
+    }
+    let down = document.createElement('a-entity');
+    down.setAttribute('geometry', 'primitive:plane; height:0.01; width:0.02');
+    down.setAttribute('material', 'src:#dpad_dir; transparent:true')
+    down.setAttribute('position', '0 -0.012 0');
+    down.setAttribute('rotation', '0 0 180');
+    down.setAttribute('shadow', 'cast:false; receive:false');
+    down.classList.add('interactive');
+    down.onmousedown = function() {
+        player.setAttribute('dpad-move-back', 'true');
+        player.removeAttribute('dpad-move-forward');
+    }
+    down.onmouseup = function() {
+        player.removeAttribute('dpad-move-back');
+    }
+    let right = document.createElement('a-entity');
+    right.setAttribute('geometry', 'primitive:plane; height:0.01; width:0.02');
+    right.setAttribute('material', 'src:#dpad_dir; transparent:true')
+    right.setAttribute('position', '0.012 0 0');
+    right.setAttribute('rotation', '0 0 -90');
+    right.setAttribute('shadow', 'cast:false; receive:false');
+    right.classList.add('interactive');
+    right.onmousedown = function() {
+        player.setAttribute('dpad-turn-right', 'true');
+        player.removeAttribute('dpad-turn-left');
+    }
+    right.onmouseup = function() {
+        player.removeAttribute('dpad-turn-right');
+    }
+    dpad.appendChild(up);
+    dpad.appendChild(right);
+    dpad.appendChild(down);
+    dpad.appendChild(left);
+    cam.appendChild(dpad);
 });
 
 AFRAME.registerComponent('setup', {
@@ -73,6 +138,7 @@ AFRAME.registerComponent('setup', {
             console.log("success!");
             if (CONTEXT_AF.room == "control") {
                 console.log("something happens");
+                document.querySelector('#screen').setAttribute('screen-descend', 'true');
             }
         }
         console.log("sequence = " + CONTEXT_AF.sequence);
@@ -94,23 +160,6 @@ function setupRoom(role) {
         return ["NW", "SE"];
     }
 };
-
-// function pressButton(button) {
-//     pressSound.play();
-//     socket.emit('pressButton', button);
-// }
-
-// socket.on('trigger', (target) => {
-//     if (role == "control") {
-        
-//     }
-//     else if (role == "cargo") {
-        
-//     }
-//     if (target == "sequence") {
-//         document.querySelector('#screen').setAttribute('screen-descend', 'true');
-//     }
-// });
 
 AFRAME.registerComponent('screen-descend', {
     tick: (function () {
@@ -135,3 +184,53 @@ addEventListener('mousedown', (event) => {
 
     removeEventListener('mousedown', this);
 });
+
+AFRAME.registerComponent("dpad-move-forward", {
+    tick: (function () {    
+        movePlayer(this.el, this.el.getAttribute('rotation').y);
+        console.log(this.el.getAttribute('rotation').y);
+    })
+});
+
+AFRAME.registerComponent("dpad-move-back", {
+    tick: (function () {    
+        movePlayer(this.el, (this.el.getAttribute('rotation').y + 180));
+        console.log(this.el.getAttribute('rotation').y * -1);
+    })
+});
+
+function movePlayer(player, dir) {
+    let val = 0.001 / Math.sin(degToRad(90));
+    let moveZ = radToDeg(Math.sin(degToRad(90 - dir)) * val);
+    let moveX = radToDeg(Math.sin(degToRad(dir)) * val);
+    let pos = player.getAttribute('position');
+    player.setAttribute('position', (pos.x - moveX) + ' ' + pos.y + ' ' + (pos.z - moveZ));
+    //console.log(camera.getAttribute('position'));
+}
+
+function radToDeg(rad) {
+    return rad * 180 / Math.PI;
+}
+
+function degToRad(deg) {
+    return deg * Math.PI / 180;
+}
+
+AFRAME.registerComponent("dpad-turn-left", {
+    tick: (function () {    
+        turnPlayer(this.el, 1);
+    })
+});
+
+AFRAME.registerComponent("dpad-turn-right", {
+    tick: (function () {    
+        turnPlayer(this.el, -1);
+    })
+});
+
+function turnPlayer(player, dir) {
+    let rot = player.getAttribute('rotation');
+    player.setAttribute('rotation', rot.x + ' ' + (rot.y + (0.5 * dir)) + ' ' + rot.z);
+    //console.log(rot);
+    //console.log(player.getAttribute('rotation'));
+}
