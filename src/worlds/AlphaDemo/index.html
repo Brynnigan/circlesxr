@@ -1,0 +1,67 @@
+<html>
+<head>
+    <!-- Circles' head scripts [REQUIRED] -->
+    <circles-start-scripts/>
+    <script src="/worlds/AlphaDemo/js/circles-sphere-env-map.js"></script>
+    <script src="/worlds/AlphaDemo/main.js"></script>
+</head>
+<body>
+  <!-- this is used to create our enter UI that creates a 2D overlay to capture a user gesture for sound/mic access etc. -->
+  <circles-start-ui/>
+
+  <!-- a-scene with 'circles-properties' component [REQUIRED] -->
+  <a-scene circles_scene_properties setup renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true;">
+    <a-assets>
+        <!-- royalty free space music from: https://pixabay.com/music/ambient-space-atmospheric-background-124841/ -->
+        <audio id="music" src="/worlds/AlphaDemo/assets/SpaceMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <!-- royalty free button click from: https://pixabay.com/sound-effects/projector-button-push-6258/ -->
+        <audio id="clickNoise" src="/worlds/AlphaDemo/assets/ClickNoise.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <a-asset-item id="console" src="/worlds/AlphaDemo/assets/models/Console_Model.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="walls-model" src="/worlds/AlphaDemo/assets/models/walls.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="floor-model" src="/worlds/AlphaDemo/assets/models/floor.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+        <img id="space" src="/worlds/AlphaDemo/assets/space2.jpg" crossorigin="anonymous">
+        <img id="locked-img" src="/worlds/AlphaDemo/assets/textures/screen_locked.png" crossorigin="anonymous">
+        <img id="screen1-img" src="/worlds/AlphaDemo/assets/textures/screen1_unlocked.png" crossorigin="anonymous">
+        <img id="poster-img" src="/worlds/AlphaDemo/assets/textures/Poster.png" crossorigin="anonymous">
+        <img id="poster1-img" src="/worlds/AlphaDemo/assets/textures/Poster1.png" crossorigin="anonymous">
+        <img id="poster2-img" src="/worlds/AlphaDemo/assets/textures/Poster2.png" crossorigin="anonymous">
+        <img id="dpad_dir" src="/worlds/AlphaDemo/assets/dpad_dir.png" crossorigin="anonymous" transparent="true">
+      <!-- Circles' built-in assets [REQUIRED] -->
+      <circles-assets/>
+    </a-assets>
+
+    <!-- CONSOLE -->
+    <a-entity id="console-model" position="0 0 -5" scale="0.5 0.5 0.5" rotation="0 0 0" gltf-model="#console" circles-sphere-env-map="src:#space">
+      <a-entity id="screen1" position="-1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen2" position="-0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen3" position="0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen4" position="1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen5" position="-1.45 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen6" position="-0.48 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen7" position="0.48 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      <a-entity id="screen8" position="1.45 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+    </a-entity>
+
+    <!-- ENVIRONMENT -->
+    <a-entity id="walls" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#walls-model" circles-sphere-env-map="src:#space"></a-entity>
+    <a-entity id="floor" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#floor-model" circles-sphere-env-map="src:#space"></a-entity>
+
+    <!-- POSTERS -->
+    <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-8 5 -12.2"rotation="0 0 0"></a-entity>
+    
+    <a-entity id="newPoster"></a-entity>
+
+    <a-entity id="buttons"></a-entity>
+
+    <a-sky material="src: #space" geometry scale></a-sky>
+
+    <!-- Circles' built-in manager and avatar [REQUIRED] -->
+    <circles-manager-avatar/>
+
+  </a-scene>
+
+  <!-- Circles' end scripts [REQUIRED] -->
+  <circles-end-scripts/>
+ </body>
+</html>

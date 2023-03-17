@@ -1,0 +1,92 @@
+/* just some css to make an overlay cover all A-Frame */
+
+#user-gesture-overlay {
+    position: fixed;
+    display: block;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 2, 136, 0.5);
+    z-index: 999999;
+    cursor: pointer;
+  }
+  
+  h1 {
+    color: white;
+    font-family:'Courier New', Courier, monospace;
+    font-weight:bolder;
+    font-size: 4vh;
+    text-align: center;
+    padding-top: 100px;
+  }
+
+  h2 {
+    color: white;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 2vh;
+    text-align: center;
+  }
+  
+  #user-gesture-button {
+    display: none;
+    width: 50%;
+    transform: translate(50%, 0);
+    height: 80px;
+    background-color: #8600E2;
+    color: white;
+    font-family:'Courier New', Courier, monospace;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    font-size: 2vh;
+    cursor: pointer;
+  }
+  
+  #user-gesture-button:hover {
+    background-color: #CA7CFF;
+  }
+  
+  #loading-animation {
+    display: block;
+    width: 80%;
+    height: 80%;
+  }
+
+  #black-screen {
+    position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    animation-name: fadeOut;
+    animation-duration: 5s;
+  }
+
+  #black-screen-2 {
+    position: fixed;
+    background-color: black;
+    width: 100%;
+    height: 100%;
+    z-index: 99999;
+    animation-name: fadeOut;
+    animation-duration: 5s;
+  }
+
+  @keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;} 
+ } 
+
+
+
+  #testing-time {
+    position: fixed;
+    color: white;
+    z-index: 999999;
+    top: 20;
+    left: 20;
+    right: 0;
+    bottom: 0;
+  }

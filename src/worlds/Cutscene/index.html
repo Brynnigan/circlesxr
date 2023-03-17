@@ -1,0 +1,79 @@
+<html>
+<head>
+    <!-- Circles' head scripts [REQUIRED] -->
+    <circles-start-scripts/>
+    <script src="/worlds/AlphaDemo/js/circles-sphere-env-map.js"></script>
+    <!-- <script src="/worlds/AlphaDemo/main.js"></script> -->
+</head>
+<body>
+  <!-- this is used to create our enter UI that creates a 2D overlay to capture a user gesture for sound/mic access etc. -->
+  <circles-start-ui/>
+
+  <!-- <div id="black-screen"></div> -->
+  <div id="black-screen-2"></div>
+  <div id="black-screen-3"></div>
+
+
+
+  <div id="testing-time"><span id="time"></span></div>
+
+  <!-- a-scene with 'circles-properties' component [REQUIRED] -->
+  <a-scene circles_scene_properties start-game background="color:rgb(0, 0, 0);">
+    <a-assets>
+        <!-- royalty free space music from: https://pixabay.com/music/ambient-space-atmospheric-background-124841/ -->
+        <audio id="music" src="/worlds/AlphaDemo/assets/SpaceMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <img id="space" src="/worlds/AlphaDemo/assets/space2.jpg" crossorigin="anonymous">
+
+        <a-asset-item id="meteor-obj" src="/worlds/Cutscene/assets/Metrorite.obj"></a-asset-item>
+        <a-asset-item id="meteor-mtl" src="/worlds/Cutscene/assets/Metrorite.mtl"></a-asset-item>
+
+        <a-asset-item id="babyearth-obj" src="/worlds/Cutscene/assets/BabyEarth.obj"></a-asset-item>
+        <a-asset-item id="babyearth-mtl" src="/worlds/Cutscene/assets/BabyEarth.mtl"></a-asset-item>
+
+        <a-mixin id="grab-move" 
+            grabbable stretchable draggable 
+            event-set__hoveron="_event: hover-start;"
+            event-set__hoveroff="_event: hover-end;"
+            shape="shape: box;" shadow></a-mixin>
+        </a-mixin>
+    
+      <!-- Circles' built-in assets [REQUIRED] -->
+      <circles-assets/>
+    </a-assets>
+
+    <a-entity id="meteor-full" position="0 -1 -5" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear; enabled: false;">
+      <a-obj-model meteor id="meteor-inside_0" src="#meteor-obj" mtl="#meteor-mtl" position="2 0.2 -1.5" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_2" src="#meteor-obj" mtl="#meteor-mtl" position="-1 -0.8 0" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_3" src="#meteor-obj" mtl="#meteor-mtl" position="2 -1 0.5" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_4" src="#meteor-obj" mtl="#meteor-mtl" position="1 -0.5 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_5" src="#meteor-obj" mtl="#meteor-mtl" position="4 0 -1" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_6" src="#meteor-obj" mtl="#meteor-mtl" position="-2.2 0.3 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_7" src="#meteor-obj" mtl="#meteor-mtl" position="0.2 1 -3" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_8" src="#meteor-obj" mtl="#meteor-mtl" position="-4 -1 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_9" src="#meteor-obj" mtl="#meteor-mtl" position="3 0.1 0.2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_10" src="#meteor-obj" mtl="#meteor-mtl" position="1 0.3 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_11" src="#meteor-obj" mtl="#meteor-mtl" position="-4 0 0.9" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_12" src="#meteor-obj" mtl="#meteor-mtl" position="-1 -1 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_13" src="#meteor-obj" mtl="#meteor-mtl" position="-2 0.1 -0.3" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+      <a-obj-model meteor id="meteor-inside_14" src="#meteor-obj" mtl="#meteor-mtl" position="0 0.3 -2" scale="0.02 0.02 0.02" rotation="0 0 0"></a-obj-model>
+  </a-entity> 
+
+  <a-entity geometry="primitive: plane; height: 8; width: 8" material="color: black" rotation="-90 0 0"  position="0 -3.5 -4"></a-entity>
+
+
+  <a-obj-model babyearth id="babyearth-full" src="#babyearth-obj" mtl="#babyearth-mtl" position="0 -0.2 -3" scale="0.08 0.08 0.08" rotation="0 0 0" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear;"></a-obj-model>
+
+
+    <a-sky material="src: #space" geometry scale></a-sky>
+
+    <!-- Circles' built-in manager and avatar [REQUIRED] -->
+    <circles-manager-avatar/>
+
+  </a-scene>
+
+  <script src="/worlds/Cutscene/flashback1.js"></script>
+
+  <!-- Circles' end scripts [REQUIRED] -->
+  <circles-end-scripts/>
+ </body>
+</html>
