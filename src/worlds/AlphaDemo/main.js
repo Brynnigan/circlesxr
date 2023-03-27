@@ -82,6 +82,8 @@ AFRAME.registerComponent('setup', {
         CONTEXT_AF.socket     = null;
         CONTEXT_AF.connected  = false;
         CONTEXT_AF.buttonEventName = "pressButton";
+        CONTEXT_AF.roverEventName = "roverMove";
+        CONTEXT_AF.gateEventName = "openGate";
 
         CONTEXT_AF.sequence = "";
 
@@ -98,7 +100,6 @@ AFRAME.registerComponent('setup', {
                 CONTEXT_AF.otherRoom = "control";
             }
             let buttons = setupRoom(CONTEXT_AF.room);
-
             for (let i = 0; i < buttons.length; i++) {
                 scene.querySelector("#" + buttons[i]).addEventListener("click", function () {
                     pressSound.play();
@@ -111,15 +112,49 @@ AFRAME.registerComponent('setup', {
 
             CONTEXT_AF.socket.on(CONTEXT_AF.buttonEventName, function(data) {
                 let button = data.button;
-                console.log(button + " pressed");
+                //console.log(button + " pressed");
                 CONTEXT_AF.clickButton(button);
             });
 
-            CONTEXT_AF.socket.on(CONTEXT_AF.testEventName, function(data) {
-                console.log('emit');
-            });
-        });  
+            if (CONTEXT_AF.room == 'cargo') {
+                scene.querySelector('#rover_up').addEventListener("click", function () {
+                    CONTEXT_AF.clickRoverButton('up');
+                });
+                scene.querySelector('#rover_left').addEventListener("click", function () {
+                    CONTEXT_AF.clickRoverButton('left');
+                });
+                scene.querySelector('#rover_down').addEventListener("click", function () {
+                    CONTEXT_AF.clickRoverButton('down');
+                });
+                scene.querySelector('#rover_right').addEventListener("click", function () {
+                    CONTEXT_AF.clickRoverButton('right');
+                });
+            }
+            else {
+                scene.querySelector('#rover_left').addEventListener("click", function () {
+                    CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'red', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                });
+                scene.querySelector('#rover_down').addEventListener("click", function () {
+                    CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'blue', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                });
+                scene.querySelector('#rover_right').addEventListener("click", function () {
+                    CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'green', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                });
+            }
 
+            CONTEXT_AF.socket.on(CONTEXT_AF.roverEventName, function(data) {
+                let i = data.i;
+                let j = data.j;
+                moveRoverTo(CONTEXT_AF.room, i, j);
+            });
+
+            CONTEXT_AF.socket.on(CONTEXT_AF.gateEventName, function (data) {
+                //console.log(data.colour);
+                CONTEXT_AF.clickGateButton(data.colour);
+            });
+
+            CONTEXT_AF.gates = makeRoverPuzzle(CONTEXT_AF.room);
+        });  
     },
     update() {},
     clickButton : function (button) {
@@ -135,20 +170,43 @@ AFRAME.registerComponent('setup', {
         }
         if (CONTEXT_AF.sequence == "SW SE NE NE SE NW") {
             //CONTEXT_AF.socket.emit('trigger', 'sequence');
-            console.log("success!");
+            //console.log("success!");
             document.querySelector('#screen1').setAttribute('material', 'src:#screen1-img');
             document.querySelector('#screen1').setAttribute('circles-portal', 'link_url:/w/Cutscene/?group=' + CONTEXT_AF.room);
             if (CONTEXT_AF.room == "control") {
-                console.log("something happens");
+                //console.log("something happens");
                 //document.querySelector('#screen').setAttribute('screen-descend', 'true');
             }
         }
-        console.log("sequence = " + CONTEXT_AF.sequence);
+        //console.log("sequence = " + CONTEXT_AF.sequence);
+    },
+    clickRoverButton : function (dir) {
+        const CONTEXT_AF = this;
+
+        //console.log(dir);
+        let pos = moveRover(dir);
+        CONTEXT_AF.socket.emit(CONTEXT_AF.roverEventName, {i:pos.i, j:pos.j, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+        moveRoverTo(CONTEXT_AF.room, pos.i, pos.j);
+    },
+    clickGateButton : function (colour) {
+        const CONTEXT_AF = this;
+        const scene      = document.querySelector('a-scene');
+
+        for (k = 0; k < CONTEXT_AF.gates.length; k++) {
+            if (CONTEXT_AF.gates[k].colour == colour) {
+                roverMap[CONTEXT_AF.gates[k].j][CONTEXT_AF.gates[k].i].open = true;
+                let gate = scene.querySelector('#rover_' + CONTEXT_AF.gates[k].i + '-' + CONTEXT_AF.gates[k].j);
+                gate.setAttribute('material', {color: 'white'});
+                gate.setAttribute('gate-timer', 'true');
+                //console.log(colour);
+                //console.log(roverMap[CONTEXT_AF.gates[k].j][CONTEXT_AF.gates[k].i]);
+            }
+        }
     }
 });
 
 function setupRoom(role) {
-    console.log(role);
+    //console.log(role);
     pressSound = document.getElementById("clickNoise");
 
     if (role == "control") {
@@ -163,21 +221,6 @@ function setupRoom(role) {
     }
 };
 
-// AFRAME.registerComponent('screen-descend', {
-//     tick: (function () {
-//         return function () {
-//             let pos = this.el.getAttribute('position');
-
-//             if (pos.y > 0.387) {
-//                 this.el.setAttribute('position', '0 ' + (pos.y - 0.01) + ' 1');
-//             }
-//             else {
-//                 this.el.removeAttribute('screen-descend');
-//             }
-//         };
-//     })()
-// });
-
 addEventListener('mousedown', (event) => {
     let music = document.getElementById("music");
     music.play();
@@ -190,14 +233,14 @@ addEventListener('mousedown', (event) => {
 AFRAME.registerComponent("dpad-move-forward", {
     tick: (function () {    
         movePlayer(this.el, this.el.getAttribute('rotation').y);
-        console.log(this.el.getAttribute('rotation').y);
+        //console.log(this.el.getAttribute('rotation').y);
     })
 });
 
 AFRAME.registerComponent("dpad-move-back", {
     tick: (function () {    
         movePlayer(this.el, (this.el.getAttribute('rotation').y + 180));
-        console.log(this.el.getAttribute('rotation').y * -1);
+        //console.log(this.el.getAttribute('rotation').y * -1);
     })
 });
 
@@ -236,3 +279,148 @@ function turnPlayer(player, dir) {
     //console.log(rot);
     //console.log(player.getAttribute('rotation'));
 }
+
+function makeRoverPuzzle(role) {
+    let buildBoard = "";
+    let colour = null;
+    let gates = [];
+    for (let i = 0; i < 14; i++) {
+        for (let j = 0; j < 10; j++) {
+            colour = getRoverColour(role, i, j);
+            buildBoard += '<a-entity id="rover_' + i + '-' + j + '" position="' + (-1.4 + (0.2 * i)) + ' ' + (1 - (0.2 * j)) + ' 0" geometry="primitive:plane; width:0.2; height:0.2" material="color:' + colour + ';" shadow="receive:true; cast:false"></a-entity>';
+            
+            if (roverMap[j][i].type == 'gate') {
+                gates.push({i:i, j:j, colour:roverMap[j][i].color});
+            }
+        }
+    }
+
+    document.querySelector("#board").innerHTML = buildBoard;
+    //console.log(role);
+
+    moveRoverTo(null, 1, 9);
+
+    return gates;
+}
+
+function getRoverColour(role, i, j) {
+    if (roverMap[j][i].type == 'wall' || (role == 'cargo')) {
+        if (role == 'control') {
+            return 'black';
+        }
+        else {
+            return 'white';
+        }
+    }
+    else if (roverMap[j][i].type == 'path' || roverMap[j][i].type == 'gate') {
+        return 'white';
+    }
+    else {
+        return 'yellow';
+    }
+}
+
+function moveRover(dir) {
+    let rover = document.querySelector('#rover');
+    let newi = Number(rover.dataset.i);
+    let newj = Number(rover.dataset.j);
+
+    if (dir == 'up') {
+        newj -= 1;
+    }
+    else if (dir == 'down') {
+        newj += 1;
+    }
+    else if (dir == 'left') {
+        newi -=1;
+    }
+    else {
+        newi += 1;
+    }
+
+    if (roverMap[newj][newi].type == 'path' || (roverMap[newj][newi].type == 'gate' && roverMap[newj][newi].open)) {
+        return {i: newi, j:newj};
+    }
+    else if (roverMap[newj][newi].type == 'goal') {
+        console.log('okay yay win time');
+        return {i: newi, j:newj};
+    }
+    else {
+        //console.log(dir);
+        //console.log(roverMap[newj][newi]);
+        return {i: rover.dataset.i, j:rover.dataset.j};
+    }
+}
+
+function moveRoverTo(role, i, j) {
+    let rover = document.querySelector("#rover");
+    rover.setAttribute('position', (-1.4 + (0.2 * i)) + ' ' + (1 - (0.2 * j)));
+    rover.dataset.i = i;
+    rover.dataset.j = j;
+
+    if (role == 'cargo') {
+        proximityDetector();
+    }
+}
+
+AFRAME.registerComponent("gate-timer", {
+    init: (function () {    
+        this.el.dataset.timer = 0;
+    }),
+    tick: (function () {
+        this.el.dataset.timer = Number(this.el.dataset.timer) + 1;
+        //console.log(this.el.dataset.timer);
+        if (Number(this.el.dataset.timer) > 250) {
+            let rover = document.querySelector("#rover");
+            let name = this.el.id;
+            //console.log(name);
+            //console.log(rover.dataset.i + ' ' + rover.dataset.j);
+            name = name.replace('rover_', '');
+            let coords = name.split('-');
+            let i = coords[0];
+            let j = coords[1];
+            if (!(rover.dataset.i == i && rover.dataset.j == j)) {
+                this.el.removeAttribute('gate-timer');
+                roverMap[j][i].open = false;
+                this.el.dataset.timer = 0;
+                if (Math.abs(i - rover.dataset.i) <= 1 && Math.abs(j - rover.dataset.j) <= 1) {
+                    this.el.setAttribute('material', {color: roverMap[j][i].color});
+                }
+            }
+        }
+    })
+});
+
+function proximityDetector() {
+    let rover = document.querySelector('#rover');
+    let i = Number(rover.dataset.i);
+    let j = Number(rover.dataset.j);
+
+    for (let x = 0; x < 14; x++) {
+        for (let y = 0; y < 10; y++) {
+            if (!(x == i && y == j)) {
+                if (roverMap[y][x].type == 'gate') {
+                    if (!roverMap[y][x].open) {
+                        if (Math.abs(i - x) <= 1 && Math.abs(j - y) <= 1) {
+                            document.querySelector('#rover_' + x + '-' + y).setAttribute('material', {color: roverMap[y][x].color});
+                        }
+                        else {
+                            document.querySelector('#rover_' + x + '-' + y).setAttribute('material', {color: 'white'});
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+let roverMap = [ [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'gate', color: 'blue', open: false}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'gate', color: 'green', open: false}, {type: 'path'}, {type: 'path'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'green', open: false}, {type: 'wall'}, {type: 'goal'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'green', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'gate', color: 'blue', open: false}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}]];
