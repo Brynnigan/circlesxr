@@ -1,0 +1,94 @@
+<html>
+<head>
+    <!-- Circles' head scripts [REQUIRED] -->
+    <circles-start-scripts/>
+    <script src="/worlds/Voyagers/js/circles-sphere-env-map.js"></script>
+    <script src="/worlds/Voyagers/main.js"></script>
+</head>
+<body>
+  <!-- this is used to create our enter UI that creates a 2D overlay to capture a user gesture for sound/mic access etc. -->
+  <circles-start-ui/>
+
+  <!-- a-scene with 'circles-properties' component [REQUIRED] -->
+  <a-scene circles_scene_properties setup renderer="antialias:true; colorManagement:true; physicallyCorrectLights:true;">
+    <a-assets>
+        <!-- royalty free space music from: https://pixabay.com/music/ambient-space-atmospheric-background-124841/ -->
+        <audio id="music" src="/worlds/Voyagers/assets/SpaceMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
+        <!-- royalty free button click from: https://pixabay.com/sound-effects/projector-button-push-6258/ -->
+        <audio id="clickNoise" src="/worlds/Voyagers/assets/ClickNoise.mp3" preload="auto" crossorigin="anonymous"></audio>
+        
+        <a-asset-item id="console" src="/worlds/Voyagers/assets/models/Console_Model.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="walls-model" src="/worlds/Voyagers/assets/models/walls_March26.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="floor-model" src="/worlds/Voyagers/assets/models/floor_March26.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="button-platform-model" src="/worlds/Voyagers/assets/models/buttonPlatform.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="button-model" src="/worlds/Voyagers/assets/models/button.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-console-model" src="/worlds/Voyagers/assets/models/roverConsole.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-buttBase-model" src="/worlds/Voyagers/assets/models/roverButtBase.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-orangeButt-model" src="/worlds/Voyagers/assets/models/rover_OrangeButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-greenButt-model" src="/worlds/Voyagers/assets/models/rover_GreenButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-blueButt-model" src="/worlds/Voyagers/assets/models/rover_BlueButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="rover-arrow-model" src="/worlds/Voyagers/assets/models/rover_TopArrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+        <img id="space" src="/worlds/Voyagers/assets/space2.jpg" crossorigin="anonymous">
+        <img id="locked-img" src="/worlds/Voyagers/assets/textures/screen_locked.png" crossorigin="anonymous">
+        <img id="screen1-img" src="/worlds/Voyagers/assets/textures/screen1_unlocked.png" crossorigin="anonymous">
+        <img id="poster-img" src="/worlds/Voyagers/assets/textures/Poster.png" crossorigin="anonymous">
+        <img id="poster1-img" src="/worlds/Voyagers/assets/textures/Poster1.png" crossorigin="anonymous">
+        <img id="poster2-img" src="/worlds/Voyagers/assets/textures/Poster2.png" crossorigin="anonymous">
+
+        <img id="dpad_dir" src="/worlds/Voyagers/assets/dpad_dir.png" crossorigin="anonymous" transparent="true">
+
+        <img id="rover-img" src="/worlds/Voyagers/assets/rover.png" crossorigin="anonymous" transparent="true">
+      <!-- Circles' built-in assets [REQUIRED] -->
+      <circles-assets/>
+    </a-assets>
+
+    <a-entity scale="0.5 0.5 0.5">
+      <!-- CONSOLE -->
+      <a-entity id="console-model" position="0 0 -5" scale="1 1 1" rotation="0 0 0" gltf-model="#console" circles-sphere-env-map="src:#space">
+        <a-entity id="screen1" position="-1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#screen1-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen2" position="-0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen3" position="0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen4" position="1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen5" position="-1.45 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen6" position="-0.48 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen7" position="0.48 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen8" position="1.45 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
+      </a-entity>
+
+      <!-- ENVIRONMENT -->
+      <a-entity id="walls" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#walls-model" circles-sphere-env-map="src:#space"></a-entity>
+      <a-entity id="floor" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#floor-model" circles-sphere-env-map="src:#space"></a-entity>
+
+      <!-- PUZZLE 2 ROVER CONSOLE -->
+        <!-- rover console base -->
+        <a-entity id="rover-console-group" position="7.6 0 11.3" rotation="0 180 0">
+          <a-entity id="rover-console" gltf-model="#rover-console-model" circles-sphere-env-map="src:#space">
+              <a-entity position="0.15 4.65 0.2" scale="1.5 1.5 1.5">
+                <a-entity id="board"></a-entity>
+                <a-entity id="rover" geometry="primitive:plane; width:0.2; height:0.2;" material="src:#rover-img; transparent:true"></a-entity>
+            </a-entity>
+          </a-entity>
+          <!-- rover console controls -->
+          <a-entity id="rover-controls"></a-entity>
+      </a-entity>
+
+      <!-- POSTERS -->
+      <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-8 5 -12.2"rotation="0 0 0"></a-entity>
+              
+      <a-entity id="newPoster"></a-entity>
+
+      <a-entity id="buttons"></a-entity>
+    </a-entity>
+
+    <a-sky material="src: #space" geometry scale></a-sky>
+
+    <!-- Circles' built-in manager and avatar [REQUIRED] -->
+    <circles-manager-avatar/>
+
+  </a-scene>
+
+  <!-- Circles' end scripts [REQUIRED] -->
+  <circles-end-scripts/>
+ </body>
+</html>
