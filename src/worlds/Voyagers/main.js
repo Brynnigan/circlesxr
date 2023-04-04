@@ -1,5 +1,6 @@
 let role = null
 let pressSound = null
+let test = null
 
 document.addEventListener(CIRCLES.EVENTS.CAMERA_ATTACHED, function() {
     let player = document.querySelector("#Player1").querySelector(".avatar");
@@ -77,6 +78,7 @@ AFRAME.registerComponent('setup', {
     schema: {},
     init() {
         const CONTEXT_AF = this;
+        test = CONTEXT_AF;
         const scene      = document.querySelector('a-scene');
         
         CONTEXT_AF.socket     = null;
@@ -84,8 +86,11 @@ AFRAME.registerComponent('setup', {
         CONTEXT_AF.buttonEventName = "pressButton";
         CONTEXT_AF.roverEventName = "roverMove";
         CONTEXT_AF.gateEventName = "openGate";
+        CONTEXT_AF.lightEventName = "setLights";
+        CONTEXT_AF.puzzleEventName = "finishPuzzle";
 
-        CONTEXT_AF.sequence = "";
+        CONTEXT_AF.sequence = [];
+        CONTEXT_AF.correctSequence = ["SW", "SE", "NE", "NE", "SE", "NW"];
 
         CONTEXT_AF.el.sceneEl.addEventListener(CIRCLES.EVENTS.WS_CONNECTED, function (data) {
             CONTEXT_AF.connected = true;
@@ -102,43 +107,53 @@ AFRAME.registerComponent('setup', {
             let buttons = setupPuzzle1(CONTEXT_AF.room);
             for (let i = 0; i < buttons.length; i++) {
                 scene.querySelector("#" + buttons[i]).addEventListener("click", function () {
-                    pressSound.play();
+                    playClick();
                     CONTEXT_AF.clickButton(this.id);
                     //console.log(this.id);
                     //console.log(CONTEXT_AF.otherRoom);
-                    CONTEXT_AF.socket.emit(CONTEXT_AF.buttonEventName, {button:this.id, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
                 });
             }
 
             CONTEXT_AF.socket.on(CONTEXT_AF.buttonEventName, function(data) {
                 let button = data.button;
-                //console.log(button + " pressed");
+                console.log(button + " pressed");
                 CONTEXT_AF.clickButton(button);
+            });
+
+            CONTEXT_AF.socket.on(CONTEXT_AF.lightEventName, function(data) {
+                setLights(data.num);
             });
 
             setupPuzzle2(CONTEXT_AF.room);
             if (CONTEXT_AF.room == 'cargo') {
                 scene.querySelector('#rover-topArrow').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.clickRoverButton('up');
                 });
                 scene.querySelector('#rover-leftArrow').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.clickRoverButton('left');
                 });
                 scene.querySelector('#rover-bottomArrow').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.clickRoverButton('down');
                 });
                 scene.querySelector('#rover-rightArrow').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.clickRoverButton('right');
                 });
             }
             else {
                 scene.querySelector('#rover-orangeButt').addEventListener("click", function () {
-                    CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'red', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                    playClick();
+                    CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'orange', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
                 });
                 scene.querySelector('#rover-blueButt').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'blue', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
                 });
                 scene.querySelector('#rover-greenButt').addEventListener("click", function () {
+                    playClick();
                     CONTEXT_AF.socket.emit(CONTEXT_AF.gateEventName, {colour:'green', room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
                 });
             }
@@ -155,6 +170,30 @@ AFRAME.registerComponent('setup', {
             });
 
             CONTEXT_AF.gates = makeRoverPuzzle(CONTEXT_AF.room);
+
+            setupPuzzle3(CONTEXT_AF.room);
+            if (CONTEXT_AF.room == "control") {
+                let arrowButtons = document.querySelector('#keypad-arrows').querySelectorAll('.interactive');
+                for (let i = 0; i < arrowButtons.length; i++) {
+                    arrowButtons[i].addEventListener("click", function () {
+                        playClick();
+                        CONTEXT_AF.changeKeyPad(this.id);
+                    });
+                }
+                let digits = document.querySelectorAll('.digit-container');
+                for (let j = 0; j < digits.length; j++) {
+                    let text = document.createElement('a-entity');
+                    text.setAttribute('position', '-0.01 0.15 0.01');
+                    text.setAttribute('text', 'value:0; color:white; font:roboto; width:12; anchor:align; baseline:top; align:center');
+                    text.classList.add('digit');
+                    text.id = 'digit-' + j;
+                    digits[j].appendChild(text);
+                }
+            }
+
+            CONTEXT_AF.socket.on(CONTEXT_AF.puzzleEventName, function(data) {
+                CONTEXT_AF.finishPuzzle(data.num);
+            });
         });  
     },
     update() {},
@@ -162,24 +201,12 @@ AFRAME.registerComponent('setup', {
         const CONTEXT_AF = this;
         const scene      = document.querySelector('a-scene');
         
-        if (button == "SW") {
-            CONTEXT_AF.sequence = "SW";
+        if (CONTEXT_AF.room == 'cargo') {
+            CONTEXT_AF.handleSequence(button);
         }
         else {
-            CONTEXT_AF.sequence += " ";
-            CONTEXT_AF.sequence += button;
+            CONTEXT_AF.socket.emit(CONTEXT_AF.buttonEventName, {button:button, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
         }
-        if (CONTEXT_AF.sequence == "SW SE NE NE SE NW") {
-            //CONTEXT_AF.socket.emit('trigger', 'sequence');
-            //console.log("success!");
-            document.querySelector('#screen1').setAttribute('material', 'src:#screen1-img');
-            document.querySelector('#screen1').setAttribute('circles-portal', 'link_url:/w/Cutscene/?group=' + CONTEXT_AF.room);
-            if (CONTEXT_AF.room == "control") {
-                //console.log("something happens");
-                //document.querySelector('#screen').setAttribute('screen-descend', 'true');
-            }
-        }
-        //console.log("sequence = " + CONTEXT_AF.sequence);
     },
     clickRoverButton : function (dir) {
         const CONTEXT_AF = this;
@@ -203,6 +230,77 @@ AFRAME.registerComponent('setup', {
                 //console.log(roverMap[CONTEXT_AF.gates[k].j][CONTEXT_AF.gates[k].i]);
             }
         }
+    },
+    handleSequence : function (next) {
+        const CONTEXT_AF = this;
+        if (next == "SW") {
+            CONTEXT_AF.sequence = [];
+            CONTEXT_AF.sequence.push(next);
+        }
+        else {
+            CONTEXT_AF.sequence.push(next);
+        }
+        let match = true;
+        for (let i = 0; i < CONTEXT_AF.sequence.length; i++) {
+            if (CONTEXT_AF.sequence[i] != CONTEXT_AF.correctSequence[i]) {
+                match = false;
+            }
+        }
+        if (match) {
+            setLights(CONTEXT_AF.sequence.length);
+            CONTEXT_AF.socket.emit(CONTEXT_AF.lightEventName, {num:CONTEXT_AF.sequence.length, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+        }
+        else {
+            setLights(0);
+            CONTEXT_AF.socket.emit(CONTEXT_AF.lightEventName, {num:0, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+        }
+        if ('' + CONTEXT_AF.sequence == '' + CONTEXT_AF.correctSequence) {
+            console.log("success!");
+            CONTEXT_AF.socket.emit(CONTEXT_AF.puzzleEventName, {num:1, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+            CONTEXT_AF.finishPuzzle(1);
+            //document.querySelector('#screen1').setAttribute('circles-portal', 'link_url:/w/Cutscene/?group=' + CONTEXT_AF.room);
+        }
+        //console.log(CONTEXT_AF.sequence);
+        //console.log(CONTEXT_AF.correctSequence);
+    },
+    changeKeyPad(id) {
+        const CONTEXT_AF = this;
+        let data = id.split('-');
+        let dir = data[0];
+        let place = data[1] - 1;
+        let digit = document.querySelector('#digit-' + place);
+        let num = Number(digit.getAttribute('text').value);
+        if (dir == 'upArrow') {
+            num += 1;
+            if (num > 9) {
+                num = 0;
+            }
+        }
+        else {
+            num -= 1;
+            if (num < 0) {
+                num = 9;
+            }
+        }
+        digit.setAttribute('text', {value:num});
+        CONTEXT_AF.checkKeyPad();
+    },
+    checkKeyPad() {
+        const CONTEXT_AF = this;
+        if (document.querySelector('#digit-0').getAttribute('text').value == '5') {
+            if (document.querySelector('#digit-1').getAttribute('text').value == '1') {
+                if (document.querySelector('#digit-2').getAttribute('text').value == '0') {
+                    if (document.querySelector('#digit-3').getAttribute('text').value == '7') {
+                        console.log('yay done');
+                        CONTEXT_AF.socket.emit(CONTEXT_AF.puzzleEventName, {num:3, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                        CONTEXT_AF.finishPuzzle(3);
+                    }
+                }
+            }
+        }
+    },
+    finishPuzzle(num) {
+        document.querySelector('#screen' + num).setAttribute('material', 'src:#screen1-img');
     }
 });
 
@@ -232,6 +330,28 @@ function setupPuzzle2(role) {
         controls.setAttribute('position', '0 2.2 0.535');
         controls.setAttribute('rotation', '12.5 0 0');
     }
+}
+
+function setupPuzzle3(role) {
+    if (role == "control") {
+        document.querySelector('#keypad-group').innerHTML = '<a-entity id="keypad" gltf-model="#keypad-model" circles-sphere-env-map="src:#space-texture"></a-entity> <!-- keypad arrows --> <a-entity id="keypad-arrows" visible="true"> <a-entity id="upArrow-1" class="interactive" gltf-model="#keypad-arrow-model" position="-1.05 0.43 -0.8" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-1" class="interactive" gltf-model="#keypad-arrow-model" position="-1.05 0.43 0.5" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-2" class="interactive" gltf-model="#keypad-arrow-model" position="-0.35 0.43 -0.5" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-2" class="interactive" gltf-model="#keypad-arrow-model" position="-0.35 0.43 0.8" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-3" class="interactive" gltf-model="#keypad-arrow-model" position="0.35 0.43 -0.8" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-3" class="interactive" gltf-model="#keypad-arrow-model" position="0.35 0.43 0.5" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-4" class="interactive" gltf-model="#keypad-arrow-model" position="1.05 0.43 -0.5" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-4" class="interactive" gltf-model="#keypad-arrow-model" position="1.05 0.43 0.8" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> </a-entity> <a-entity id="keypad-digits" visible="true"> <a-entity id="keypad-digit1" class="digit-container" position="-1.05 0.41 -0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit2" class="digit-container" position="-0.35 0.41 0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit3" class="digit-container" position="0.35 0.41 -0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit4" class="digit-container" position="1.05 0.41 0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> </a-entity>';
+    }
+}
+
+function setLights(num) {
+    for (let i = 1; i < 7; i++) {
+        if (i <= num) {
+            document.querySelector('#light-' + i).setAttribute('material', 'color:limegreen');
+        }
+        else {
+            document.querySelector('#light-' + i).setAttribute('material', 'color:grey');
+        }
+    }
+}
+
+function playClick() {
+    pressSound.currentTime = 0;
+    pressSound.play();
 }
 
 addEventListener('mousedown', (event) => {
@@ -356,6 +476,8 @@ function moveRover(dir) {
     }
     else if (roverMap[newj][newi].type == 'goal') {
         console.log('okay yay win time');
+        test.socket.emit(test.puzzleEventName, {num:2, room:test.otherRoom, world:CIRCLES.getCirclesWorld()});
+        test.finishPuzzle(2);
         return {i: newi, j:newj};
     }
     else {
@@ -431,9 +553,9 @@ let roverMap = [ [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}
                  [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'gate', color: 'blue', open: false}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'gate', color: 'green', open: false}, {type: 'path'}, {type: 'path'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'green', open: false}, {type: 'wall'}, {type: 'goal'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}],
-                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'orange', open: false}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'orange', open: false}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'green', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
-                 [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'red', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
+                 [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'orange', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'gate', color: 'blue', open: false}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}]];

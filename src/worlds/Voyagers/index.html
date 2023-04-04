@@ -30,6 +30,9 @@
         <a-asset-item id="blueButt-model" src="/worlds/Voyagers/assets/models/blueButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="rover-arrow-model" src="/worlds/Voyagers/assets/models/rover_TopArrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
+        <a-asset-item id="keypad-model" src="/worlds/Voyagers/assets/models/keypad.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="keypad-arrow-model" src="/worlds/Voyagers/assets/models/keypad_arrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
         <img id="space" src="/worlds/Voyagers/assets/space2.jpg" crossorigin="anonymous">
         <img id="space-texture" src="/worlds/Voyagers/assets/space_texture.jpg" crossorigin="anonymous">
         <img id="locked-img" src="/worlds/Voyagers/assets/textures/screen_locked.png" crossorigin="anonymous">
@@ -48,7 +51,7 @@
     <a-entity scale="0.5 0.5 0.5">
       <!-- CONSOLE -->
       <a-entity id="console-model" position="0 0 -5" scale="1 1 1" rotation="0 0 0" gltf-model="#console" circles-sphere-env-map="src:#space-texture">
-        <a-entity id="screen1" position="-1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#screen1-img" rotation="-50 0 0"></a-entity>
+        <a-entity id="screen1" position="-1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
         <a-entity id="screen2" position="-0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
         <a-entity id="screen3" position="0.48 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
         <a-entity id="screen4" position="1.45 2.95 -0.3" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
@@ -63,6 +66,14 @@
       <a-entity id="floor" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#floor-model" circles-sphere-env-map="src:#space-texture"></a-entity>
       <a-entity id="door" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#door-model" circles-sphere-env-map="src:#space-texture"></a-entity>
 
+      <!-- LIGHTS -->
+      <a-entity id="light-1" position="3 0.25 -2" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+      <a-entity id="light-2" position="3 0.25 -1" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+      <a-entity id="light-3" position="3 0.25 0" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+      <a-entity id="light-4" position="3 0.25 1" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+      <a-entity id="light-5" position="3 0.25 2" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+      <a-entity id="light-6" position="3 0.25 3" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
+
       <!-- PUZZLE 2 ROVER CONSOLE -->
         <!-- rover console base -->
         <a-entity id="rover-console-group" position="7.6 0 11.3" rotation="0 180 0">
@@ -75,6 +86,9 @@
           <!-- rover console controls -->
           <a-entity id="rover-controls"></a-entity>
       </a-entity>
+
+      <!-- PUZZLE 3 KEYPAD -->
+      <a-entity id="keypad-group" position="6 4.5 -12.3" rotation="90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity>
 
       <!-- POSTERS -->
       <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-8 5 -12.2"rotation="0 0 0"></a-entity>
