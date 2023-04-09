@@ -90,6 +90,9 @@ AFRAME.registerComponent('setup', {
         CONTEXT_AF.lightEventName = "setLights";
         CONTEXT_AF.puzzleEventName = "finishPuzzle";
 
+        CONTEXT_AF.solved = 0;
+        CONTEXT_AF.puzzles = [false, false, false];
+
         CONTEXT_AF.sequence = [];
         CONTEXT_AF.correctSequence = ["SW", "SE", "NE", "NE", "SE", "NW"];
 
@@ -301,7 +304,14 @@ AFRAME.registerComponent('setup', {
         }
     },
     finishPuzzle(num) {
-        document.querySelector('#screen' + num).setAttribute('material', 'src:#screen1-img');
+        const CONTEXT_AF = this;
+        if (!CONTEXT_AF.puzzles[num - 1]) {
+            CONTEXT_AF.puzzles[num - 1] = true;
+            CONTEXT_AF.solved += 1;
+            document.querySelector('#video-screen').setAttribute('src', '#video' + CONTEXT_AF.solved);
+            document.querySelector('#video' + CONTEXT_AF.solved).play();
+            document.querySelector('#screen' + CONTEXT_AF.solved).setAttribute('material', 'src:#screen' + CONTEXT_AF.solved + '-img');
+        }
     }
 });
 
@@ -359,7 +369,7 @@ addEventListener('mousedown', (event) => {
     let music = document.getElementById("music");
     music.play();
     music.loop = true;
-    music.volume = 0.4;
+    music.volume = 0.2;
 
     removeEventListener('mousedown', this);
 });

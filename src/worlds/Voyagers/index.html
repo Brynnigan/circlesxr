@@ -3,6 +3,7 @@
     <!-- Circles' head scripts [REQUIRED] -->
     <circles-start-scripts/>
     <script src="/worlds/Voyagers/js/circles-sphere-env-map.js"></script>
+    <!-- <script src="https://unpkg.com/aframe-animation-component/dist/aframe-animation-component.min.js"></script> -->
     <script src="/worlds/Voyagers/main.js"></script>
 </head>
 <body>
@@ -16,6 +17,10 @@
         <audio id="music" src="/worlds/Voyagers/assets/SpaceMusic.mp3" preload="auto" crossorigin="anonymous"></audio>
         <!-- royalty free button click from: https://pixabay.com/sound-effects/projector-button-push-6258/ -->
         <audio id="clickNoise" src="/worlds/Voyagers/assets/ClickNoise.mp3" preload="auto" crossorigin="anonymous"></audio>
+
+        <video id="video1" src="/worlds/Voyagers/assets/videos/Video1.mp4" preload="auto" crossorigin="anonymous"></video>
+        <video id="video2" src="/worlds/Voyagers/assets/videos/Video2.mp4" preload="auto" crossorigin="anonymous"></video>
+        <video id="video3" src="/worlds/Voyagers/assets/videos/Video3.mp4" preload="auto" crossorigin="anonymous"></video>
         
         <a-asset-item id="console" src="/worlds/Voyagers/assets/models/Console_Model.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="walls-model" src="/worlds/Voyagers/assets/models/walls_March26.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
@@ -40,6 +45,8 @@
         <img id="space-texture" src="/worlds/Voyagers/assets/space_texture.jpg" crossorigin="anonymous">
         <img id="locked-img" src="/worlds/Voyagers/assets/textures/screen_locked.png" crossorigin="anonymous">
         <img id="screen1-img" src="/worlds/Voyagers/assets/textures/screen1_unlocked.png" crossorigin="anonymous">
+        <img id="screen2-img" src="/worlds/Voyagers/assets/textures/screen2_unlocked.png" crossorigin="anonymous">
+        <img id="screen3-img" src="/worlds/Voyagers/assets/textures/screen3_unlocked.png" crossorigin="anonymous">
         <img id="poster-img" src="/worlds/Voyagers/assets/textures/Poster.png" crossorigin="anonymous">
         <img id="poster1-img" src="/worlds/Voyagers/assets/textures/Poster1.png" crossorigin="anonymous">
         <img id="poster2-img" src="/worlds/Voyagers/assets/textures/Poster2.png" crossorigin="anonymous">
@@ -68,6 +75,9 @@
         <a-entity id="screen7" position="0.48 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
         <a-entity id="screen8" position="1.45 2.35 0.42" geometry="primitive:plane; width:0.85; height:0.85;" material="src:#locked-img" rotation="-50 0 0"></a-entity>
       </a-entity>
+
+      <!-- VIDEO SCREEN -->
+      <a-video id="video-screen" src="#video1" rotation="0 -90 0" position="10 5 0" width="8" height="4.5" transparent="false"></a-video>
 
       <!-- ENVIRONMENT -->
       <a-entity id="walls" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#walls-model" circles-sphere-env-map="src:#space-texture"></a-entity>
