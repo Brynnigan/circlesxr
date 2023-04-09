@@ -4,10 +4,11 @@ let test = null
 
 document.addEventListener(CIRCLES.EVENTS.CAMERA_ATTACHED, function() {
     let player = document.querySelector("#Player1").querySelector(".avatar");
-    document.querySelector("#Player1").setAttribute('movement-controls', {enabled:false});
+    //document.querySelector("#Player1").setAttribute('movement-controls', {enabled:false});
     
     player.querySelector(".user_head").setAttribute("circles-shadow", {cast:false, receive:false});
     player.querySelector(".user_body").setAttribute("circles-shadow", {cast:false, receive:false});
+    player.setAttribute('position-reader', 'true');
     let cam = document.querySelector('[camera]');
     cam.setAttribute('look-controls', {enabled:false});
     let dpad = document.createElement('a-entity');
@@ -559,3 +560,28 @@ let roverMap = [ [{type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}
                  [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'gate', color: 'orange', open: false}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'path'}, {type: 'path'}, {type: 'path'}, {type: 'gate', color: 'blue', open: false}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}],
                  [{type: 'wall'}, {type: 'path'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}, {type: 'wall'}]];
+
+//ensures the player doesn't move outside of the room boundaries
+AFRAME.registerComponent('position-reader', {
+    //based on code from A-Frame documentation at: https://aframe.io/docs/1.3.0/components/camera.html
+    tick: (function () {
+        var position = new THREE.Vector3();
+
+        return function () {
+            this.el.object3D.getWorldPosition(position);
+
+            if (position.x > 5.5) {
+                this.el.object3D.position.x = 5;
+            }
+            if (position.x < -5.5) {
+                this.el.object3D.position.x = -5;
+            }
+            if (position.z > 6) {
+                this.el.object3D.position.z = 5;
+            }
+            if (position.z < -6) {
+                this.el.object3D.position.z = -5;
+            }
+        };
+    })()
+});
