@@ -291,10 +291,10 @@ AFRAME.registerComponent('setup', {
     },
     checkKeyPad() {
         const CONTEXT_AF = this;
-        if (document.querySelector('#digit-0').getAttribute('text').value == '5') {
-            if (document.querySelector('#digit-1').getAttribute('text').value == '1') {
-                if (document.querySelector('#digit-2').getAttribute('text').value == '0') {
-                    if (document.querySelector('#digit-3').getAttribute('text').value == '7') {
+        if (document.querySelector('#digit-0').getAttribute('text').value == '1') {
+            if (document.querySelector('#digit-1').getAttribute('text').value == '0') {
+                if (document.querySelector('#digit-2').getAttribute('text').value == '7') {
+                    if (document.querySelector('#digit-3').getAttribute('text').value == '5') {
                         console.log('yay done');
                         CONTEXT_AF.socket.emit(CONTEXT_AF.puzzleEventName, {num:3, room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
                         CONTEXT_AF.finishPuzzle(3);
@@ -346,6 +346,9 @@ function setupPuzzle2(role) {
 function setupPuzzle3(role) {
     if (role == "control") {
         document.querySelector('#keypad-group').innerHTML = '<a-entity id="keypad" gltf-model="#keypad-model" circles-sphere-env-map="src:#space-texture"></a-entity> <!-- keypad arrows --> <a-entity id="keypad-arrows" visible="true"> <a-entity id="upArrow-1" class="interactive" gltf-model="#keypad-arrow-model" position="-1.05 0.43 -0.8" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-1" class="interactive" gltf-model="#keypad-arrow-model" position="-1.05 0.43 0.5" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-2" class="interactive" gltf-model="#keypad-arrow-model" position="-0.35 0.43 -0.5" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-2" class="interactive" gltf-model="#keypad-arrow-model" position="-0.35 0.43 0.8" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-3" class="interactive" gltf-model="#keypad-arrow-model" position="0.35 0.43 -0.8" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-3" class="interactive" gltf-model="#keypad-arrow-model" position="0.35 0.43 0.5" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="upArrow-4" class="interactive" gltf-model="#keypad-arrow-model" position="1.05 0.43 -0.5" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="downArrow-4" class="interactive" gltf-model="#keypad-arrow-model" position="1.05 0.43 0.8" rotation="0 180 0" circles-sphere-env-map="src:#space-texture"></a-entity> </a-entity> <a-entity id="keypad-digits" visible="true"> <a-entity id="keypad-digit1" class="digit-container" position="-1.05 0.41 -0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit2" class="digit-container" position="-0.35 0.41 0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit3" class="digit-container" position="0.35 0.41 -0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> <a-entity id="keypad-digit4" class="digit-container" position="1.05 0.41 0.15" geometry="primitive:plane; width:0.6; height:0.8;" material="color:#78cdff" rotation="-90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity> </a-entity>';
+    }
+    if (role == "cargo") {
+        document.querySelector('#star-puzzle').innerHTML = '<a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#star-poster1" position="-8 5 -12.2"rotation="0 0 0"></a-entity> <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#star-poster2" position="6 5 -12.2"rotation="0 0 0"></a-entity> <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#star-poster3" position="-12.2 5 -9"rotation="0 90 0"></a-entity>';
     }
 }
 

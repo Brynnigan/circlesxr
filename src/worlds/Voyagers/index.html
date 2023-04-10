@@ -60,6 +60,10 @@
         <img id="poster1-img" src="/worlds/Voyagers/assets/textures/Poster1.png" crossorigin="anonymous">
         <img id="poster2-img" src="/worlds/Voyagers/assets/textures/Poster2.png" crossorigin="anonymous">
 
+        <img id="star-poster1" src="/worlds/Voyagers/assets/textures/Aquila.png" crossorigin="anonymous">
+        <img id="star-poster2" src="/worlds/Voyagers/assets/textures/BigDipper.png" crossorigin="anonymous">
+        <img id="star-poster3" src="/worlds/Voyagers/assets/textures/Casseopeia.png" crossorigin="anonymous">
+
         <img id="dpad_dir" src="/worlds/Voyagers/assets/dpad_dir.png" crossorigin="anonymous" transparent="true">
 
         <img id="rover-img" src="/worlds/Voyagers/assets/rover.png" crossorigin="anonymous" transparent="true">
@@ -139,8 +143,10 @@
       <!-- PUZZLE 3 KEYPAD -->
       <a-entity id="keypad-group" position="6 4.5 -12.3" rotation="90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity>
 
+      <a-entity id="star-puzzle"></a-entity>
+
       <!-- PUZZLE 1 STUFF -->
-      <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-8 5 -12.2"rotation="0 0 0"></a-entity>
+      <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-1 5 -12.2"rotation="0 0 0"></a-entity>
       <a-entity id="newPoster"></a-entity>
       <a-entity id="buttons"></a-entity>
 
@@ -151,23 +157,23 @@
           <a-entity position="-0.95 0.4 0.01" text="value:Pistol Grip; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
           <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
       </a-entity>
-  </a-entity> 
+    </a-entity> 
 
-  <!-- manned maneuvering unit -->
-  <a-entity id="MMU" gltf-model="#MMU-model" position="-9.7 0 3.2" rotation="0 50 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(this)">
-      <a-entity class="description" position="0 5 0" geometry="primitive:plane; width:2.5; height:1" material="color:white" visible="false" transparent="false">
-          <a-entity position="-1.2 0.4 0.01" text="value:Manned Maneuvering Unit; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-          <a-entity position="-1.2 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2.5; anchor:align; baseline:top; color:black"></a-entity>
-        </a-entity>
+    <!-- manned maneuvering unit -->
+    <a-entity id="MMU" gltf-model="#MMU-model" position="-9.7 0 4" rotation="0 -100 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(this)">
+        <a-entity class="description" rotation="0 180 0" position="0 5 0" geometry="primitive:plane; width:2.5; height:1" material="color:white" visible="false" transparent="false">
+            <a-entity position="-1.2 0.4 0.01" text="value:Manned Maneuvering Unit; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+            <a-entity position="-1.2 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2.5; anchor:align; baseline:top; color:black"></a-entity>
+          </a-entity>
+      </a-entity>
     </a-entity>
-  </a-entity>
 
 
-  <a-sky material="src: #space-texture" geometry scale></a-sky>
+    <a-sky material="src: #space-texture" geometry scale></a-sky>
 
-  </a-scene>
+    </a-scene>
 
-  <!-- Circles' end scripts [REQUIRED] -->
-  <circles-end-scripts/>
-</body>
+    <!-- Circles' end scripts [REQUIRED] -->
+    <circles-end-scripts/>
+  </body>
 </html>
