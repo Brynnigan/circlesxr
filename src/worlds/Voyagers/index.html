@@ -23,9 +23,12 @@
         <video id="video3" src="/worlds/Voyagers/assets/videos/Video3.mp4" preload="auto" crossorigin="anonymous"></video>
         
         <a-asset-item id="console" src="/worlds/Voyagers/assets/models/Console_Model.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
-        <a-asset-item id="walls-model" src="/worlds/Voyagers/assets/models/walls_March26.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="walls-model" src="/worlds/Voyagers/assets/models/walls.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="floor-model" src="/worlds/Voyagers/assets/models/floor_March26.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="door-model" src="/worlds/Voyagers/assets/models/door.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="roof-model" src="/worlds/Voyagers/assets/models/roof.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="columns-model" src="/worlds/Voyagers/assets/models/columns.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="ceiling-light-model" src="/worlds/Voyagers/assets/models/ceilingLight.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
         <a-asset-item id="nav-mesh-model" src="/worlds/Voyagers/assets/nav-mesh.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
@@ -38,8 +41,14 @@
         <a-asset-item id="blueButt-model" src="/worlds/Voyagers/assets/models/blueButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="rover-arrow-model" src="/worlds/Voyagers/assets/models/rover_TopArrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
+        <a-asset-item id="orange-cube-model" src="/worlds/Voyagers/assets/models/cubeOrange.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="green-cube-model" src="/worlds/Voyagers/assets/models/cubeGreen.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="blue-cube-model" src="/worlds/Voyagers/assets/models/cubeBlue.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>   
+
         <a-asset-item id="keypad-model" src="/worlds/Voyagers/assets/models/keypad.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="keypad-arrow-model" src="/worlds/Voyagers/assets/models/keypad_arrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+        <a-asset-item id="video-screen-model" src="/worlds/Voyagers/assets/models/video.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
         <img id="space" src="/worlds/Voyagers/assets/space2.jpg" crossorigin="anonymous">
         <img id="space-texture" src="/worlds/Voyagers/assets/space_texture.jpg" crossorigin="anonymous">
@@ -56,7 +65,9 @@
         <img id="rover-img" src="/worlds/Voyagers/assets/rover.png" crossorigin="anonymous" transparent="true">
 
         <a-asset-item id="pistol-grip-model" src="/worlds/Voyagers/assets/models/pistolGrip.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
-      <!-- Circles' built-in assets [REQUIRED] -->
+        <a-asset-item id="MMU-model" src="/worlds/Voyagers/assets/models/MMU.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
+        <!-- Circles' built-in assets [REQUIRED] -->
       <circles-assets/>
     </a-assets>
 
@@ -77,12 +88,32 @@
       </a-entity>
 
       <!-- VIDEO SCREEN -->
-      <a-video id="video-screen" src="#video1" rotation="0 -90 0" position="10 5 0" width="8" height="4.5" transparent="false"></a-video>
+      <a-entity id="video-screen-group" position="14 0 0" rotation="0 -90 0">
+        <a-entity id="video-screen-console"  gltf-model="#video-screen-model" circles-sphere-env-map="src:#space-texture">
+          <a-video id="video-screen" src="#video1" rotation="0 0 0" position="0 5.5 -0.3" width="8" height="4.5" scale="1.2 1.2 1.2" transparent="false"></a-video>
+        </a-entity>
+      </a-entity>
 
       <!-- ENVIRONMENT -->
       <a-entity id="walls" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#walls-model" circles-sphere-env-map="src:#space-texture"></a-entity>
       <a-entity id="floor" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#floor-model" circles-sphere-env-map="src:#space-texture"></a-entity>
       <a-entity id="door" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#door-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+      <a-entity id="roof" position="0 0 0"  gltf-model="#roof-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+
+      <a-entity id="columns" position="0 0 0"  gltf-model="#columns-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+      <a-entity id="ceiling-light" position="17 11.7 0"  gltf-model="#ceiling-light-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+
+      <!-- PROPS -->
+      <a-entity id="cube-group-1" position="-10 0 -6.85" rotation="0 80 0">
+        <a-entity id="orange-cube-1" position="-2.5 0 0" rotation="0 35 0" gltf-model="#orange-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+        <a-entity id="green-cube-1" position="-1.1 2 -0.15" rotation="0 -12.4 0" gltf-model="#green-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+        <a-entity id="blue-cube-1" position="0 0 0" rotation="0 0 0" gltf-model="#blue-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+      </a-entity>
+      <a-entity id="cube-group-2" position="-5.2 0 10.4" rotation="0 0 0">
+          <a-entity id="green-cube-2" position="0 0 0" rotation="0 20 0" gltf-model="#green-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+          <a-entity id="blue-cube-2" position="0 2 0" rotation="0 -20 0" gltf-model="#blue-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+      </a-entity>
+      <a-entity id="orange-cube-2" position="14.2 0 6" rotation="0 35 0" gltf-model="#orange-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
 
       <!-- LIGHTS -->
       <a-entity id="light-1" position="3 0.25 -2" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
@@ -113,24 +144,30 @@
       <a-entity id="newPoster"></a-entity>
       <a-entity id="buttons"></a-entity>
 
-    </a-entity>
-
-    <!-- ARTIFACTS -->
+      <!-- ARTIFACTS -->
     <!-- pistol grip tool -->
-    <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" scale="0.5 0.5 0.5" rotation="0 -45 0" position="4.5 0 -2" circles-sphere-env-map="src:#space-texture" onclick="toggleDescription(this)">
-        <a-entity class="description" position="0 3 0" geometry="primitive:plane; width:2; height:1" material="color:white">
-            <a-entity position="-0.95 0.4 0.01" text="value:Pistol Grip; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-            <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
-        </a-entity>
-    </a-entity> 
-    <!-- circles-artefact="inspectScale:0.2 0.2 0.2; label_offset:0.0 0.6 0.0; textRotationY:0.0; textLookAt:true; inspectRotation:0 0 0; label_visible:true; arrow_position:down; title:Viola Desmond; description:A determined entrepreneur. When Nova Scotia beauty schools would not accept her, as a black woman, she travelled to Atlanta and New York for training. Afterwards, she came back and opened her own beauty schools.;"></a-entity> -->
- 
+    <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" rotation="0 -45 0" position="8 0 -6" circles-sphere-env-map="src:#space-texture" onclick="toggleDescription(this)">
+      <a-entity class="description" position="0 3 0" geometry="primitive:plane; width:2; height:1" material="color:white" visible="false" transparent="false">
+          <a-entity position="-0.95 0.4 0.01" text="value:Pistol Grip; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+          <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+      </a-entity>
+  </a-entity> 
 
-    <a-sky material="src: #space-texture" geometry scale></a-sky>
+  <!-- manned maneuvering unit -->
+  <a-entity id="MMU" gltf-model="#MMU-model" position="-9.7 0 3.2" rotation="0 50 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(this)">
+      <a-entity class="description" position="0 5 0" geometry="primitive:plane; width:2.5; height:1" material="color:white" visible="false" transparent="false">
+          <a-entity position="-1.2 0.4 0.01" text="value:Manned Maneuvering Unit; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+          <a-entity position="-1.2 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2.5; anchor:align; baseline:top; color:black"></a-entity>
+        </a-entity>
+    </a-entity>
+  </a-entity>
+
+
+  <a-sky material="src: #space-texture" geometry scale></a-sky>
 
   </a-scene>
 
   <!-- Circles' end scripts [REQUIRED] -->
   <circles-end-scripts/>
- </body>
+</body>
 </html>
