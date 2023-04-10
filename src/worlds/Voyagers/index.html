@@ -84,8 +84,6 @@
       <a-entity id="floor" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#floor-model" circles-sphere-env-map="src:#space-texture"></a-entity>
       <a-entity id="door" position="0 0 0" scale="1 1 1" rotation="0 0 0" gltf-model="#door-model" circles-sphere-env-map="src:#space-texture"></a-entity>
 
-      <!-- <a-entity gltf-model="#nav-mesh-model" position="0 0 0" nav-mesh visible="false"></a-entity> -->
-
       <!-- LIGHTS -->
       <a-entity id="light-1" position="3 0.25 -2" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
       <a-entity id="light-2" position="3 0.25 -1" geometry="primitive:cylinder; radius:0.25; height:0.5" material="color:grey"></a-entity>
@@ -110,18 +108,22 @@
       <!-- PUZZLE 3 KEYPAD -->
       <a-entity id="keypad-group" position="6 4.5 -12.3" rotation="90 0 0" circles-sphere-env-map="src:#space-texture"></a-entity>
 
-      <!-- POSTERS -->
+      <!-- PUZZLE 1 STUFF -->
       <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-8 5 -12.2"rotation="0 0 0"></a-entity>
-              
       <a-entity id="newPoster"></a-entity>
-
       <a-entity id="buttons"></a-entity>
 
     </a-entity>
 
     <!-- ARTIFACTS -->
     <!-- pistol grip tool -->
-    <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" scale="0.5 0.5 0.5" position="5 0 -2.5" circles-sphere-env-map="src:#space-texture" circles-artefact="inspectScale:0.2 0.2 0.2; label_offset:0.0 0.6 0.0; textRotationY:0.0; textLookAt:true; inspectRotation:0 0 0; label_visible:true; arrow_position:down; title:Viola Desmond; description:A determined entrepreneur. When Nova Scotia beauty schools would not accept her, as a black woman, she travelled to Atlanta and New York for training. Afterwards, she came back and opened her own beauty schools.;"></a-entity>
+    <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" scale="0.5 0.5 0.5" rotation="0 -45 0" position="4.5 0 -2" circles-sphere-env-map="src:#space-texture" onclick="toggleDescription(this)">
+        <a-entity class="description" position="0 3 0" geometry="primitive:plane; width:2; height:1" material="color:white">
+            <a-entity position="-0.95 0.4 0.01" text="value:Pistol Grip; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+            <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+        </a-entity>
+    </a-entity> 
+    <!-- circles-artefact="inspectScale:0.2 0.2 0.2; label_offset:0.0 0.6 0.0; textRotationY:0.0; textLookAt:true; inspectRotation:0 0 0; label_visible:true; arrow_position:down; title:Viola Desmond; description:A determined entrepreneur. When Nova Scotia beauty schools would not accept her, as a black woman, she travelled to Atlanta and New York for training. Afterwards, she came back and opened her own beauty schools.;"></a-entity> -->
  
 
     <a-sky material="src: #space-texture" geometry scale></a-sky>

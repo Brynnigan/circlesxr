@@ -4,7 +4,7 @@ let test = null
 
 document.addEventListener(CIRCLES.EVENTS.CAMERA_ATTACHED, function() {
     let player = document.querySelector("#Player1").querySelector(".avatar");
-    //document.querySelector("#Player1").setAttribute('movement-controls', {enabled:false});
+    document.querySelector("#Player1").setAttribute('movement-controls', {enabled:false});
     
     player.querySelector(".user_head").setAttribute("circles-shadow", {cast:false, receive:false});
     player.querySelector(".user_body").setAttribute("circles-shadow", {cast:false, receive:false});
@@ -595,3 +595,9 @@ AFRAME.registerComponent('position-reader', {
         };
     })()
 });
+
+function toggleDescription(artefact) {
+    let desc = artefact.querySelector('.description');
+    let toggle = !desc.getAttribute('visible');
+    desc.setAttribute('visible', toggle);
+}
