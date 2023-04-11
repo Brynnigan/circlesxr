@@ -355,10 +355,12 @@ function setupPuzzle3(role) {
 function setLights(num) {
     for (let i = 1; i < 7; i++) {
         if (i <= num) {
-            document.querySelector('#light-' + i).setAttribute('material', 'color:limegreen');
+            document.querySelector('#Wlight-' + i).setAttribute('visible', 'false');
+            document.querySelector('#Glight-' + i).setAttribute('visible', 'true');
         }
         else {
-            document.querySelector('#light-' + i).setAttribute('material', 'color:grey');
+            document.querySelector('#Glight-' + i).setAttribute('visible', 'false');
+            document.querySelector('#Wlight-' + i).setAttribute('visible', 'true');
         }
     }
 }
