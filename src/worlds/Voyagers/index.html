@@ -172,6 +172,14 @@
       <a-entity id="newPoster"></a-entity>
       <a-entity id="buttons"></a-entity>
 
+      <!-- RESTART BUTTON -->
+      <a-entity id="button-reset-group" position="-12.5 4 0" scale="1 1 1" rotation="90 90 0">
+        <a-entity id="button-plat-rest"  gltf-model="#button-platform-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+        <a-entity id="button-reset" class="interactive" gltf-model="#button-model" circles-sphere-env-map="src:#space-texture"
+        animation__mouseenter="property:position.y; from:0; to:-0.11; startEvents:click; dur:1000; easing:easeInOutSine"
+        animation__mouseleave="property:position.y; from:-0.11; to:0; startEvents:click; dur:800; easing:easeInOutSine" shadow></a-entity>></a-entity>
+      </a-entity>
+
       <!-- ARTIFACTS -->
     <!-- pistol grip tool -->
     <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" rotation="0 225 0" position="3 0 10" circles-sphere-env-map="src:#space-texture" onclick="toggleDescription(this)">

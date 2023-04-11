@@ -90,6 +90,8 @@ AFRAME.registerComponent('setup', {
         CONTEXT_AF.lightEventName = "setLights";
         CONTEXT_AF.puzzleEventName = "finishPuzzle";
 
+        CONTEXT_AF.resetEventName = "resetExperience";
+
         CONTEXT_AF.solved = 0;
         CONTEXT_AF.puzzles = [false, false, false];
 
@@ -197,6 +199,17 @@ AFRAME.registerComponent('setup', {
 
             CONTEXT_AF.socket.on(CONTEXT_AF.puzzleEventName, function(data) {
                 CONTEXT_AF.finishPuzzle(data.num);
+            });
+
+            CONTEXT_AF.socket.on(CONTEXT_AF.resetEventName, function(data) {
+                playClick();
+                location.reload();
+            });
+
+            scene.querySelector('#button-reset').addEventListener("click", function () {
+                playClick();
+                CONTEXT_AF.socket.emit(CONTEXT_AF.resetEventName, {room:CONTEXT_AF.otherRoom, world:CIRCLES.getCirclesWorld()});
+                location.reload();
             });
         });  
     },
