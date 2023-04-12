@@ -39,6 +39,9 @@
         <a-asset-item id="blueButt-model" src="/worlds/Voyagers/assets/models/blueButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="rover-arrow-model" src="/worlds/Voyagers/assets/models/rover_TopArrow.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
 
+        <a-asset-item id="reset-button-model" src="/worlds/Voyagers/assets/models/triangleButt.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+        <a-asset-item id="reset-buttonBase-model" src="/worlds/Voyagers/assets/models/triangleButtBase.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
+
         <a-asset-item id="orange-cube-model" src="/worlds/Voyagers/assets/models/cubeOrange.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="green-cube-model" src="/worlds/Voyagers/assets/models/cubeGreen.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>
         <a-asset-item id="blue-cube-model" src="/worlds/Voyagers/assets/models/cubeBlue.gltf" response-type="arraybuffer" crossorigin="anonymous"></a-asset-item>   
@@ -111,6 +114,13 @@
       <a-entity id="columns" position="0 0 0"  gltf-model="#columns-model" circles-sphere-env-map="src:#space-texture"></a-entity>
       <a-entity id="ceiling-light" position="17 11.7 0"  gltf-model="#ceiling-light-model" circles-sphere-env-map="src:#space-texture"></a-entity>
 
+      <!-- RESET BUTTON -->
+      <a-entity id="reset-button-grp" position="-5.5 8 12" scale="0.6 0.6 0.6" rotation="90 180 0">
+        <a-entity id="button-reset"  gltf-model="#reset-button-model" circles-sphere-env-map="src:#space-texture" class="interactive"></a-entity>
+        <a-entity id="reset-buttonBase" gltf-model="#reset-buttonBase-model" circles-sphere-env-map="src:#space-texture"></a-entity>
+        <a-entity id="warning" position="0 0 2" rotation="-90 0 0" text="value:Reset\nExperience; font:roboto; width:20; anchor:align; baseline:top; color:darkred; align:center"></a-entity>
+      </a-entity>
+
       <!-- PROPS -->
       <a-entity id="cube-group-1" position="-10 0 -6.85" rotation="0 80 0">
         <a-entity id="orange-cube-1" position="-2.5 0 0" rotation="0 35 0" gltf-model="#orange-cube-model" circles-sphere-env-map="src:#space-texture"></a-entity>
@@ -168,24 +178,16 @@
       <a-entity id="star-puzzle"></a-entity>
 
       <!-- PUZZLE 1 STUFF -->
-      <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-1 5 -12.2"rotation="0 0 0"></a-entity>
+      <a-entity geometry="primitive:plane; width:4.34; height:5.6;" material="src:#poster-img" position="-1 5 -12.2"rotation="0 0 0" circles-sphere-env-map="src:#space-texture2"></a-entity>
       <a-entity id="newPoster"></a-entity>
       <a-entity id="buttons"></a-entity>
-
-      <!-- RESTART BUTTON -->
-      <a-entity id="button-reset-group" position="-12.5 4 0" scale="1 1 1" rotation="90 90 0">
-        <a-entity id="button-plat-rest"  gltf-model="#button-platform-model" circles-sphere-env-map="src:#space-texture"></a-entity>
-        <a-entity id="button-reset" class="interactive" gltf-model="#button-model" circles-sphere-env-map="src:#space-texture"
-        animation__mouseenter="property:position.y; from:0; to:-0.11; startEvents:click; dur:1000; easing:easeInOutSine"
-        animation__mouseleave="property:position.y; from:-0.11; to:0; startEvents:click; dur:800; easing:easeInOutSine" shadow></a-entity>>
-      </a-entity>
 
       <!-- ARTIFACTS -->
     <!-- pistol grip tool -->
     <a-entity id="pistol-grip" class="interactive" gltf-model="#pistol-grip-model" rotation="0 225 0" position="3 0 10" circles-sphere-env-map="src:#space-texture" onclick="toggleDescription(this)">
       <a-entity class="description" rotation="0 -45 0" position="0 3 0" geometry="primitive:plane; width:2; height:1" material="color:white" visible="false" transparent="false">
           <a-entity position="-0.95 0.4 0.01" text="value:Pistol Grip; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-          <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+          <a-entity position="-0.95 0.2 0.01" text="value:A self-contained, computer-controlled power tool, invented by Hubble engineer, Paul Richards. It’s programmable drill allowed for astronauts to set it’s speed, number of turns, and direction according to specific tasks and repairs. The PGT would become the standard power tool to be used for International Space Station and Hubble servicing missions.; font:roboto; width:1.8; anchor:align; baseline:top; color:black"></a-entity>
       </a-entity>
     </a-entity> 
 
@@ -193,7 +195,7 @@
     <a-entity id="MMU" gltf-model="#MMU-model" position="-9.7 0 4" rotation="0 -100 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(this)">
         <a-entity class="description" rotation="0 180 0" position="0 5 0" geometry="primitive:plane; width:2.5; height:1" material="color:white" visible="false" transparent="false">
             <a-entity position="-1.2 0.4 0.01" text="value:Manned Maneuvering Unit; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-            <a-entity position="-1.2 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2.5; anchor:align; baseline:top; color:black"></a-entity>
+            <a-entity position="-1.2 0.2 0.01" text="value:The propulsion device is worn as a backpack and maneuvered using hand controllers and small nitrogen thrusters. The device allowed astronauts to move around for activities outside the space shuttle without needing safety tethers.; font:roboto; width:2.5; anchor:align; baseline:top; color:black"></a-entity>
           </a-entity>
       </a-entity>
     </a-entity>
@@ -202,8 +204,8 @@
     <a-entity id="GD" gltf-model="#GD-model" position="4 4.6 6.2"rotation="-90 0 0" scale="15 15 15" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(document.querySelector('#GD-artefact'))"></a-entity>
     <a-entity id="GD-artefact" position="4 4.6 6.2">
       <a-entity class="description" position="0 0 -0.5" rotation="0 180 0" geometry="primitive:plane; width:2; height:1" material="color:white" visible="false" transparent="false">
-        <a-entity position="-0.95 0.4 0.01" text="value:Golden Record; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-        <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.4 0.01" text="value:The Golden Record; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.2 0.01" text="value:NASA placed a message aboard a vessel in the form of a golden disk in hopes of communicating with extraterrestrials, containing sounds and images portraying life on earth; font:roboto; width:1.8; anchor:align; baseline:top; color:black"></a-entity>
       </a-entity>
     </a-entity>
 
@@ -211,17 +213,17 @@
     <a-entity id="Rover" gltf-model="#Rover-model" position="6.82 0.17 -2.5" scale="20 20 20" rotation="0 -130 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(document.querySelector('#Rover-artefact'))"></a-entity>
     <a-entity id="Rover-artefact" position="6.82 0.17 -2.5">
       <a-entity class="description" position="0 2 0" rotation="0 -90 0" geometry="primitive:plane; width:2; height:1" material="color:white" visible="false" transparent="false">
-        <a-entity position="-0.95 0.4 0.01" text="value:Moon Rover; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-        <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.4 0.01" text="value:Opportunity Rover; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.2 0.01" text="value:NASA's rover and its most successful interplanetary mission. It operated for 15 years and exceeded its life expectation by 60 times. Opportunity ceased communications with NASA in June 2018 after a sandstorm on Mars.; font:roboto; width:1.8; anchor:align; baseline:top; color:black"></a-entity>
       </a-entity>
     </a-entity>
 
     <!-- NSA -->
-    <a-entity id="NSA" gltf-model="#NSA-model" position="-10.5 2 -1.5" scale="0.008 0.008 0.008" rotation="0 45 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(document.querySelector('#NSA-artefact'))"></a-entity>
-    <a-entity id="NSA-artefact" position="-10.5 2 -1.5">
+    <a-entity id="NSA" gltf-model="#NSA-model" position="-5.26 1.204 -1.977" scale="0.002 0.002 0.002" rotation="-25 45 0" circles-sphere-env-map="src:#space-texture" class="interactive" onclick="toggleDescription(document.querySelector('#NSA-artefact'))"></a-entity>
+    <a-entity id="NSA-artefact" position="-5.26 1.204 -1.977">
       <a-entity class="description" position="0 2 0" rotation="0 90 0" geometry="primitive:plane; width:2; height:1" material="color:white" visible="false" transparent="false">
-        <a-entity position="-0.95 0.4 0.01" text="value:Satellite; font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
-        <a-entity position="-0.95 0.2 0.01" text="value:This is a cool space thing with a long description so I can test how it displays. Yay space is cool!; font:roboto; width:2; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.4 0.01" text="value:ISS (Lego Model); font:roboto; width:4; anchor:align; baseline:top; color:black"></a-entity>
+        <a-entity position="-0.95 0.2 0.01" text="value:The International Space Station is a multi-national project as well as the largest structure humans put into space. The project is continuously evolving to include new missions and experiments. This is a toy model of it.; font:roboto; width:1.8; anchor:align; baseline:top; color:black"></a-entity>
       </a-entity>
     </a-entity>
 
